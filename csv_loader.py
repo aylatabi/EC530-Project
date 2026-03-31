@@ -1,4 +1,5 @@
 import sys
+import sqlite3
 import pandas as pd
 from enum import Enum
 
@@ -33,15 +34,22 @@ def build_create_table(table_name, table_dict):
     sql_string = sql_table_name + "(" + sql_table_data + ");"
     return sql_string
 
-# def build_sql_table(sql_string):
+def build_sql_table(sql_string):
+    conn = sqlite3.connect("locations.db")
+    cursor = conn.cursor()
+    
+    cursor.execute(sql_string)
+    
+    conn.close()
     
 def main():
     
     df = load_csv("locations.csv")
     results = map_dtypes(df)
     print(results)
-    build_create_table("locations", results)
-    
+    sql_string = build_create_table("locations", results)
+    build_sql_table(sql_string)
+
     return 0
 
 
