@@ -23,33 +23,47 @@ def map_dtypes(df):
     return results
 
 def build_create_table(table_name, table_dict):
-    sql_table_name = "CREATE TABLE " + table_name
+    sql_table_name = "CREATE TABLE IF NOT EXISTS " + table_name
     
     columns = ["id INTEGER PRIMARY KEY AUTOINCREMENT"]
     
     for key, value in table_dict.items():
-        columns.append(key + " " + value)
+        columns.append('"' + key + '" ' + value)
     
     sql_table_data = ", ".join(columns)
     sql_string = sql_table_name + "(" + sql_table_data + ");"
     return sql_string
 
-def build_sql_table(sql_string):
-    conn = sqlite3.connect("locations.db")
+def build_sql_table(conn, sql_string):
+
     cursor = conn.cursor()
     
     cursor.execute(sql_string)
+    conn.commit()
+    cursor.execute("PRAGMA table_info(locations)")
+    # print(cursor.fetchall())
+ 
+
+def insert_data(conn, table_name, df):
+    sql_string = "INSERT INTO " + table_name 
+    sql_column_lists = ""
+    for column_name in df.columns:
+        sql_column_lists += column_name + ", "
     
-    conn.close()
+    sql_string += " (" + sql_column_lists + ") VALUES ("
+    for row in df.itertuples():
+        sql_string += 
+        print(row.Index)
     
 def main():
-    
+    conn = sqlite3.connect("locations.db")
     df = load_csv("locations.csv")
     results = map_dtypes(df)
-    print(results)
+    # print(results)
     sql_string = build_create_table("locations", results)
-    build_sql_table(sql_string)
-
+    build_sql_table(conn, sql_string)
+    insert_data(conn, "locations", df)
+    conn.close()
     return 0
 
 
