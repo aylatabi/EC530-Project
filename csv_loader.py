@@ -1,12 +1,18 @@
+import sys
 import pandas as pd
 
-#read csv file and do error checking to see if 
-def read_command_line():
-    pass
-# Read a CSV file 
-def load_csv(filepath):
-    pass
 
-def insert_data():
-    pass
+def load_csv(file_path):
+    return pd.read_csv(file_path)    
+    
+    
+def main():
+    
+    df = load_csv("locations.csv")
+    
+    print(df.head())
+    return 0
 
+
+if __name__ == "__main__":
+    sys.exit(main())
