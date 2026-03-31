@@ -10,7 +10,7 @@ def main():
     
     df = load_csv("locations.csv")
     
-    print(df.head())
+    print(df["Location"][0])
     return 0
 
 
